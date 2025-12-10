@@ -1,166 +1,729 @@
-<style>
-    /* ... (Mantén tus variables :root anteriores) ... */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Educativa Ciberseguridad | Dr. Johan Tapia</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta de Colores Unificada */
+            --primary: #00f3ff;       /* Cian Brillante */
+            --secondary: #bc13fe;     /* Púrpura Neón */
+            --neon-blue: #00f3ff;     /* Alias para compatibilidad */
+            --neon-purple: #bc13fe;   /* Alias para compatibilidad */
+            --bg-dark: #050505;
+            --panel-bg: rgba(16, 20, 30, 0.95);
+            --border: 1px solid rgba(0, 243, 255, 0.3);
+            --glass-border: 1px solid rgba(0, 243, 255, 0.15);
+            --text: #e0e0e0;
+            --glass: blur(10px);
+        }
 
-    /* --- MODERN HEADER STYLES --- */
-    .cyber-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 2rem;
-        background: rgba(10, 15, 30, 0.75); /* Fondo semitransparente */
-        backdrop-filter: blur(12px); /* Efecto vidrio borroso */
-        border-bottom: 1px solid rgba(0, 243, 255, 0.15);
-        position: sticky; /* Se queda fijo al hacer scroll */
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
-    /* Izquierda: Títulos */
-    .header-branding h1 {
-        font-family: 'Orbitron';
-        font-size: 1.8rem;
-        margin: 0;
-        background: linear-gradient(90deg, #fff, var(--neon-blue));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
-    }
-    .header-subtitle {
-        font-family: 'JetBrains Mono';
-        font-size: 0.75rem;
-        color: var(--neon-purple);
-        letter-spacing: 1px;
-        margin-top: 2px;
-    }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-    /* Centro: Buscador Avanzado */
-    .search-container {
-        position: relative;
-        flex-grow: 1;
-        max-width: 500px;
-        margin: 0 2rem;
-    }
-    .cyber-input {
-        width: 100%;
-        padding: 10px 45px;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid #333;
-        border-radius: 4px;
-        color: var(--neon-blue);
-        font-family: 'JetBrains Mono';
-        transition: all 0.3s ease;
-    }
-    .cyber-input:focus {
-        border-color: var(--neon-blue);
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-        background: rgba(0, 10, 20, 0.8);
-    }
-    .search-icon-btn {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #666;
-        pointer-events: none;
-        transition: 0.3s;
-    }
-    .cyber-input:focus + .search-icon-btn { color: var(--neon-blue); }
+        /* --- MATRIX BACKGROUND --- */
+        #bgCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.08;
+        }
 
-    /* Derecha: Panel de Control */
-    .header-controls {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
+        /* --- LAYOUT --- */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    /* Indicador de Estado */
-    .system-status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-family: 'JetBrains Mono';
-        font-size: 0.75rem;
-        color: #0f0;
-        background: rgba(0, 255, 0, 0.05);
-        padding: 5px 12px;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 255, 0, 0.2);
-    }
-    .status-dot {
-        width: 8px; height: 8px;
-        background-color: #0f0;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #0f0;
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        /* --- SIDEBAR (Barra Lateral) --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(8, 8, 12, 0.95);
+            border-right: var(--border);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            backdrop-filter: var(--glass);
+        }
 
-    /* Botones de Acción */
-    .action-btn {
-        background: transparent;
-        border: 1px solid #444;
-        color: #aaa;
-        width: 35px; height: 35px;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .action-btn:hover {
-        border-color: var(--neon-blue);
-        color: var(--neon-blue);
-        box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-    }
+        .profile {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
 
-    /* Ajuste para móviles */
-    @media (max-width: 768px) {
-        .cyber-header { flex-direction: column; gap: 15px; align-items: stretch; }
-        .header-branding { text-align: center; }
-        .search-container { margin: 0; max-width: 100%; }
-        .header-controls { justify-content: space-between; }
-    }
-</style>
+        .profile h2 {
+            font-family: 'Share Tech Mono';
+            color: #fff;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+        
+        .profile span { color: var(--primary); }
 
-<header class="cyber-header">
-    <div class="header-branding">
-        <h1>SEAUCI <span style="font-weight:300; font-size: 0.8em; opacity:0.8;">CORE</span></h1>
-        <div class="header-subtitle">
-            <i class="fas fa-terminal" style="font-size:0.8em"></i> SYS.ADMIN: DR. JOHAN TAPIA
-        </div>
+        .nav-menu button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            font-family: 'Rajdhani';
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu button:hover, .nav-menu button.active {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(0, 243, 255, 0.1), transparent);
+            border-left: 3px solid var(--primary);
+            text-shadow: 0 0 8px var(--primary);
+        }
+
+        .linkedin-btn {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            background: #0077b5;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: 260px;
+            width: 100%;
+            /* Quitamos padding superior para que el header pegajoso funcione bien */
+            padding: 0; 
+        }
+
+        /* --- NUEVO HEADER MODERNO (Sticky/Pegajoso) --- */
+        .cyber-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            background: rgba(10, 15, 30, 0.85); /* Fondo semitransparente */
+            backdrop-filter: blur(12px); /* Efecto vidrio */
+            border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+            position: sticky; /* Se queda fijo al hacer scroll */
+            top: 0;
+            z-index: 900;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        /* Branding del Header */
+        .header-branding h1 {
+            font-family: 'Orbitron';
+            font-size: 1.8rem;
+            margin: 0;
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .header-subtitle {
+            font-family: 'JetBrains Mono';
+            font-size: 0.75rem;
+            color: var(--neon-purple);
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* Buscador Central Moderno */
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+        }
+        .cyber-input {
+            width: 100%;
+            padding: 10px 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: var(--neon-blue);
+            font-family: 'JetBrains Mono';
+            transition: all 0.3s ease;
+        }
+        .cyber-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            background: rgba(0, 10, 20, 0.8);
+            outline: none;
+        }
+        .search-icon-btn {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .cyber-input:focus + .search-icon-btn { color: var(--neon-blue); }
+
+        /* Controles Derecha */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Indicador de Estado */
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.75rem;
+            color: #0f0;
+            background: rgba(0, 255, 0, 0.05);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            background-color: #0f0;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0f0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* Botones de Acción */
+        .action-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #aaa;
+            width: 35px; height: 35px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .action-btn:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        /* --- CONTENEDOR DE SECCIONES (Padding para contenido) --- */
+        .content-body {
+            padding: 0 2.5rem 2.5rem 2.5rem;
+        }
+
+        /* --- TARJETAS DE CONTENIDO --- */
+        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background: var(--panel-bg);
+            border: var(--border);
+            border-radius: 6px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card::before {
+            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+            background: var(--primary);
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.03);
+            cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #fff;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .card-body {
+            padding: 20px;
+            color: #ccc;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: none; 
+        }
+        
+        .card.open .card-body { display: block; }
+        .card.open .card-header i.toggle { transform: rotate(180deg); color: var(--primary); }
+
+        /* ESTILOS DE TEXTO */
+        .highlight-title {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-family: 'Share Tech Mono';
+        }
+        ul, ol { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 5px; }
+        .tag { background: rgba(0, 243, 255, 0.15); color: var(--primary); padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; border: 1px solid rgba(0, 243, 255, 0.3); }
+
+        /* --- TOOLKIT & QUIZ --- */
+        .tool-panel {
+            background: #0f0f13;
+            padding: 20px;
+            border: 1px dashed var(--secondary);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .tool-input { width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: var(--primary); font-family: monospace; margin: 10px 0; }
+        .tool-btn { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+
+        .quiz-container { text-align: center; padding: 40px; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 10px; }
+        .quiz-option { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #1a1a20; border: 1px solid #333; color: #fff; cursor: pointer; transition: 0.2s; text-align: left; }
+        .quiz-option:hover { border-color: var(--primary); background: #222; }
+
+        /* MODO IMPRESIÓN */
+        @media print {
+            #bgCanvas, .sidebar, .header-controls, .search-container, .tool-input, .tool-btn, .quiz-container { display: none !important; }
+            .main-content { margin-left: 0; padding: 0; }
+            .cyber-header { position: static; border: none; box-shadow: none; background: #fff; color: #000; }
+            body { background-color: #fff; color: #000; }
+            .card { border: 1px solid #000; background: #fff; color: #000; break-inside: avoid; }
+            .card-body { display: block !important; }
+            .card-title, .highlight-title, strong { color: #000 !important; }
+            a { text-decoration: none; color: #000; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: relative; display: flex; overflow-x: auto; padding: 10px; border-bottom: 1px solid var(--primary); border-right: none; }
+            .nav-menu { display: flex; gap: 10px; }
+            .nav-menu button { white-space: nowrap; padding: 8px 15px; font-size: 0.9rem; }
+            .main-content { margin-left: 0; }
+            .content-body { padding: 1.5rem; }
+            .profile { display: none; }
+            .cyber-header { flex-direction: column; gap: 15px; align-items: stretch; padding: 1rem; }
+            .header-branding { text-align: center; }
+            .search-container { margin: 0; max-width: 100%; }
+            .header-controls { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="app-container">
+        
+        <nav class="sidebar">
+            <div class="profile">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;"></i>
+                <h2>SEAUCI 25-27</h2>
+                <span>Dr. Johan Tapia</span>
+                <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="linkedin-btn">
+                    <i class="fab fa-linkedin"></i> Contactar en LinkedIn
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <button class="active" onclick="showTab('mod1', this)"><i class="fas fa-book"></i> Fundamentos</button>
+                <button onclick="showTab('mod2', this)"><i class="fas fa-fire-extinguisher"></i> Incidentes</button>
+                <button onclick="showTab('mod3', this)"><i class="fas fa-microscope"></i> Recolección</button>
+                <button onclick="showTab('mod4', this)"><i class="fab fa-windows"></i> Sistemas Win</button>
+                <button onclick="showTab('mod5', this)"><i class="fas fa-file-contract"></i> Reportes</button>
+                <button onclick="showTab('lab', this)"><i class="fas fa-flask"></i> Laboratorio</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            
+            <header class="cyber-header">
+                <div class="header-branding">
+                    <h1>SEAUCI <span style="font-weight:300; font-size: 0.8em; opacity:0.8;">CORE</span></h1>
+                    <div class="header-subtitle">
+                        <i class="fas fa-terminal" style="font-size:0.8em"></i> SYS.ADMIN: DR. JOHAN TAPIA
+                    </div>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="cyber-input" placeholder="Comando de búsqueda (ej: MFT)..." onkeyup="filterCards()">
+                    <i class="fas fa-search search-icon-btn"></i>
+                </div>
+
+                <div class="header-controls">
+                    <div class="system-status">
+                        <div class="status-dot"></div>
+                        <span>SECURE</span>
+                    </div>
+
+                    <button class="action-btn" onclick="toggleFullScreen()" title="Pantalla Completa">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="action-btn" onclick="window.print()" title="Exportar PDF">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-body">
+
+                <div id="mod1" class="section active">
+                    <div class="card open">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-landmark"></i> La Tríada CIA</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="highlight-title">Confidencialidad</div>
+                            <p>Propiedad de que la información no se revela a individuos, entidades o procesos no autorizados.</p>
+                            
+                            <div class="highlight-title">Integridad</div>
+                            <p>Garantía de exactitud y completitud. Los datos no han sido modificados sin autorización (no manipulados).</p>
+                            
+                            <div class="highlight-title">Disponibilidad</div>
+                            <p>Información accesible y utilizable por una entidad autorizada cuando lo requiera.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-bug"></i> Amenazas y Malware</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><span class="tag">Ransomware</span> Malware que cifra archivos y pide rescate económico.</li>
+                                <li><span class="tag">Rootkit</span> Software que oculta su presencia en el sistema (nivel kernel).</li>
+                                <li><span class="tag">Phishing</span> Ingeniería social para robar credenciales mediante engaño.</li>
+                                <li><span class="tag">Botnet</span> Red de equipos infectados controlados remotamente.</li>
+                                <li><span class="tag">SQLi</span> Inyección de código en bases de datos a través de webs vulnerables.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-key"></i> Criptografía Básica</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="highlight-title">Simétrica vs Asimétrica</div>
+                            <p><strong>Simétrica:</strong> Usa la <em>misma clave</em> para cifrar y descifrar (Rápida, ej: AES).</p>
+                            <p><strong>Asimétrica:</strong> Usa clave Pública (cifrar) y Privada (descifrar). Resuelve el intercambio de claves.</p>
+                            <div class="highlight-title">Hash</div>
+                            <p>Función unidireccional que genera un resumen fijo (huella digital). Si cambia un bit del archivo, cambia todo el hash. Vital para verificar <strong>Integridad</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mod2" class="section">
+                    <div class="card open">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-list-ol"></i> Ciclo de Vida (NIST 800-61)</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li><strong>Preparación:</strong> Políticas, herramientas, formación del equipo.</li>
+                                <li><strong>Detección y Análisis:</strong> Identificar IOCs (Indicadores de Compromiso), triaje inicial.</li>
+                                <li><strong>Contención, Erradicación y Recuperación:</strong>
+                                    <ul>
+                                        <li><em>Contención:</em> Aislar sistemas para detener el daño.</li>
+                                        <li><em>Erradicación:</em> Eliminar la amenaza (borrar malware, cerrar cuentas).</li>
+                                        <li><em>Recuperación:</em> Restaurar servicios y validar funcionamiento.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Actividad Post-Incidente:</strong> Lecciones aprendidas.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mod3" class="section">
+                    <div class="card open">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-box"></i> Adquisición de Evidencia</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="highlight-title">Orden de Volatilidad (RFC 3227)</div>
+                            <p>Se debe recolectar primero lo que se pierde al apagar el sistema:</p>
+                            <ol>
+                                <li>Memoria RAM, registros de CPU, caché.</li>
+                                <li>Conexiones de red, procesos en ejecución.</li>
+                                <li>Disco Duro (Datos persistentes).</li>
+                                <li>Backups y medios externos.</li>
+                            </ol>
+                            <div class="highlight-title">Hardware Write Blocker</div>
+                            <p>Dispositivo físico fundamental que se conecta entre el disco de evidencia y el equipo forense para <strong>impedir cualquier escritura</strong> y garantizar la integridad legal de la prueba.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mod4" class="section">
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-hdd"></i> Sistema de Ficheros (NTFS)</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>$MFT (Master File Table):</strong> Índice central de todos los archivos. Contiene metadatos (Fechas MACE, permisos).</li>
+                                <li><strong>Prefetch (.pf):</strong> Rastrea la ejecución de aplicaciones (10 primeros segundos). Ubicado en <code>C:\Windows\Prefetch</code>. Prueba que un programa fue ejecutado.</li>
+                                <li><strong>Papelera ($Recycle.Bin):</strong> Al borrar, crea dos archivos: <code>$I</code> (Metadatos: fecha, ruta) y <code>$R</code> (Contenido real renombrado).</li>
+                                <li><strong>Hiberfil.sys:</strong> Copia de la RAM en disco (Hibernación).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-database"></i> Registro de Windows</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <p>Base de datos de configuración del sistema (Hives: SYSTEM, SOFTWARE, NTUSER.DAT).</p>
+                            <div class="highlight-title">Claves Críticas para Forense:</div>
+                            <ul>
+                                <li><strong>Auto-Run (Persistencia):</strong> Claves <code>Run</code> y <code>RunOnce</code>. Donde el malware se configura para iniciar con Windows.</li>
+                                <li><strong>ShimCache (AppCompatCache):</strong> Rastrea ejecutables para compatibilidad. Prueba la existencia de ficheros pasados.</li>
+                                <li><strong>UserAssist:</strong> (En HKCU) Monitoriza programas ejecutados vía GUI. Los nombres están ofuscados en <strong>ROT13</strong>.</li>
+                                <li><strong>Shellbags:</strong> Rastrea acceso a carpetas y ventanas. Prueba acceso a carpetas específicas.</li>
+                                <li><strong>USBStor:</strong> Historial de dispositivos USB conectados.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-file-alt"></i> Logs de Eventos</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <p>Archivos <code>.evtx</code>. Clave principal:</p>
+                            <ul>
+                                <li><strong>Evento 4624:</strong> Inicio de sesión exitoso.</li>
+                                <li><strong>Tipos de Logon:</strong> Tipo 2 (Teclado/Local), Tipo 3 (Red), Tipo 10 (RDP/Remoto).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mod5" class="section">
+                    <div class="card open">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div class="card-title"><i class="fas fa-pen-nib"></i> El Informe y Remediación</div>
+                            <i class="fas fa-chevron-down toggle"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="highlight-title">Pautas del Informe</div>
+                            <ul>
+                                <li>Escribir en tiempo pasado (los hechos ya ocurrieron).</li>
+                                <li>Evitar jerga técnica en el Resumen Ejecutivo (dirigido a gerencia).</li>
+                                <li>Ser preciso, claro y basarse en evidencias verificadas.</li>
+                            </ul>
+                            <div class="highlight-title">Remediación</div>
+                            <p>Acciones para restaurar la seguridad: Cambio global de contraseñas, reconstrucción de sistemas infectados, cierre de vectores de ataque y mejora de monitoreo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="lab" class="section">
+                    <div class="tool-panel">
+                        <h3 style="color:var(--primary)"><i class="fas fa-tools"></i> Decodificador ROT13 (UserAssist)</h3>
+                        <p>El registro UserAssist ofusca los nombres de programas con ROT13. Úsalo aquí:</p>
+                        <input type="text" id="rotInput" class="tool-input" placeholder="Escribe texto ofuscado..." oninput="applyRot13()">
+                        <div id="rotOutput" style="color: #fff; font-family: 'Share Tech Mono';">Resultado...</div>
+                    </div>
+
+                    <div class="tool-panel">
+                        <h3 style="color:var(--secondary)"><i class="fas fa-code"></i> Base64 Decoder</h3>
+                        <p>Común en malware y payloads web.</p>
+                        <input type="text" id="b64Input" class="tool-input" placeholder="Pegar cadena Base64..." oninput="applyBase64()">
+                        <div id="b64Output" style="color: #fff; font-family: 'Share Tech Mono';">Resultado...</div>
+                    </div>
+
+                    <div class="quiz-container">
+                        <h2 style="color: #fff; margin-bottom: 20px;">Simulador de Examen</h2>
+                        <div id="quizQuestion" style="font-size: 1.2rem; color: var(--primary); margin-bottom: 20px;">Pregunta...</div>
+                        <div id="quizOptions"></div>
+                        <div id="quizFeedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+                        <button class="tool-btn" style="margin-top: 20px; width: 100%;" onclick="nextQuestion()">Siguiente Pregunta</button>
+                    </div>
+                </div>
+
+            </div> </main>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" class="cyber-input" placeholder="Comando de búsqueda..." onkeyup="filterContent()">
-        <i class="fas fa-search search-icon-btn"></i>
-    </div>
+    <script>
+        // --- MATRIX BACKGROUND (CANVAS) ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <div class="header-controls">
-        <div class="system-status">
-            <div class="status-dot"></div>
-            <span>SECURE</span>
-        </div>
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        <button class="action-btn" onclick="toggleFullScreen()" title="Pantalla Completa">
-            <i class="fas fa-expand"></i>
-        </button>
-        <button class="action-btn" onclick="window.print()" title="Exportar PDF">
-            <i class="fas fa-print"></i>
-        </button>
-    </div>
-</header>
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
 
-<script>
-    // ... tus scripts anteriores ...
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.05)'; // Rastro
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f3ff'; // Color CIAN
+            ctx.font = fontSize + 'px monospace';
 
-    // Función nueva para Pantalla Completa
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
+            for(let i=0; i<drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random()*chars.length));
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
             }
         }
-    }
-</script>
+        setInterval(drawMatrix, 40);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // --- NAVEGACIÓN ---
+        function showTab(tabId, btnRef) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-menu button').forEach(b => b.classList.remove('active'));
+            btnRef.classList.add('active');
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- ACORDEÓN ---
+        function toggleCard(header) {
+            header.parentElement.classList.toggle('open');
+        }
+
+        // --- BUSCADOR ---
+        function filterCards() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            // Si hay búsqueda, mostrar todas las secciones para buscar en todo el contenido
+            if(input.length > 0) {
+                document.querySelectorAll('.section').forEach(s => s.classList.add('active'));
+            } else {
+                // Si se borra, volver a la pestaña activa (reset simple)
+                document.querySelector('.nav-menu button.active').click();
+                return;
+            }
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if(text.includes(input)) {
+                    card.style.display = "block";
+                    card.classList.add('open');
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // --- PANTALLA COMPLETA ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // --- HERRAMIENTAS ---
+        function applyRot13() {
+            const input = document.getElementById('rotInput').value;
+            document.getElementById('rotOutput').innerText = input.replace(/[a-zA-Z]/g, c => String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26));
+        }
+        function applyBase64() {
+            try {
+                document.getElementById('b64Output').innerText = atob(document.getElementById('b64Input').value);
+            } catch(e) { document.getElementById('b64Output').innerText = "Error de formato"; }
+        }
+
+        // --- QUIZ DATA ---
+        const questions = [
+            { q: "¿Qué pilar garantiza que la información no fue alterada?", a: ["Confidencialidad", "Integridad", "Disponibilidad"], c: 1 },
+            { q: "¿Qué malware pide rescate por los datos?", a: ["Spyware", "Ransomware", "Botnet"], c: 1 },
+            { q: "En forense, ¿qué se recolecta primero?", a: ["Disco Duro", "RAM", "Backups"], c: 1 },
+            { q: "¿Qué hace un Write Blocker?", a: ["Cifra el disco", "Impide escritura en evidencia", "Borra datos"], c: 1 },
+            { q: "¿Dónde se ubican los archivos Prefetch?", a: ["C:\\Windows\\Prefetch", "C:\\Temp", "Registro"], c: 0 },
+            { q: "UserAssist usa esta codificación:", a: ["Base64", "ROT13", "AES"], c: 1 },
+            { q: "Evento ID 4624 indica:", a: ["Fallo de login", "Login exitoso", "Reinicio"], c: 1 }
+        ];
+        let qIdx = 0;
+
+        function loadQuiz() {
+            const q = questions[qIdx];
+            document.getElementById('quizQuestion').innerText = (qIdx+1) + ". " + q.q;
+            const optsDiv = document.getElementById('quizOptions');
+            optsDiv.innerHTML = "";
+            q.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i, btn);
+                optsDiv.appendChild(btn);
+            });
+            document.getElementById('quizFeedback').innerText = "";
+        }
+
+        function checkAnswer(selected, btn) {
+            const correct = questions[qIdx].c;
+            if(selected === correct) {
+                btn.style.borderColor = "#0f0";
+                btn.style.color = "#0f0";
+                document.getElementById('quizFeedback').innerHTML = "<span style='color:#0f0'>¡Correcto!</span>";
+            } else {
+                btn.style.borderColor = "#f00";
+                btn.style.color = "#f00";
+                document.getElementById('quizFeedback').innerHTML = "<span style='color:#f00'>Incorrecto</span>";
+            }
+        }
+
+        function nextQuestion() {
+            qIdx = (qIdx + 1) % questions.length;
+            loadQuiz();
+        }
+        
+        // Iniciar Quiz
+        loadQuiz();
+
+    </script>
+</body>
+</html>
