@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masterclass Ciberseguridad | Dr. Johan Tapia</title>
+    <title>Aula Magistral: Fundamentos de Ciberseguridad</title>
     
-    <!-- Fuentes Futuristas y Profesionales -->
+    <!-- Fuentes y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -14,8 +14,9 @@
             --neon-blue: #00f3ff;
             --neon-green: #0aff0a;
             --neon-purple: #bc13fe;
+            --neon-orange: #ff9d00;
             --dark-bg: #050505;
-            --card-bg: rgba(20, 20, 35, 0.85);
+            --card-bg: rgba(20, 20, 35, 0.9);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #e0e0e0;
         }
@@ -33,12 +34,8 @@
         /* --- MATRIX BACKGROUND --- */
         #matrixCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.15; /* Sutil para no molestar la lectura */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.12;
         }
 
         /* --- SCROLLBAR --- */
@@ -46,585 +43,521 @@
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 4px; }
 
-        /* --- HEADER & HERO --- */
+        /* --- HEADER --- */
         header {
-            background: rgba(5, 5, 5, 0.9);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
             padding: 1.5rem 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.1);
         }
 
         .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .terminal-title {
             font-family: 'JetBrains Mono', monospace;
-            color: var(--neon-green);
-            font-size: 1.2rem;
-            font-weight: 700;
+            color: var(--neon-green); font-size: 1.2rem; font-weight: 700;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            background-color: var(--neon-green);
-            animation: blink 1s infinite;
-        }
-
+        .cursor { display: inline-block; width: 10px; background-color: var(--neon-green); animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .btn-connect {
-            background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 0.5rem 1.2rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            transition: 0.3s;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .btn-header {
+            background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            padding: 0.5rem 1.2rem; border-radius: 4px; text-decoration: none;
+            font-family: 'Orbitron', sans-serif; transition: 0.3s; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px;
         }
+        .btn-header:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
 
-        .btn-connect:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        /* --- NAVIGATION --- */
+        /* --- NAV TABS --- */
         .nav-wrapper {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 2rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
+            padding: 2rem 1rem; max-width: 1200px; margin: 0 auto;
         }
 
         .nav-tab {
-            background: rgba(255,255,255,0.05);
-            border: none;
-            color: #aaa;
-            padding: 12px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: #aaa; padding: 10px 20px; border-radius: 4px; cursor: pointer;
+            font-family: 'Orbitron', sans-serif; transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
         }
 
-        .nav-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .nav-tab:hover { border-color: var(--neon-blue); color: #fff; }
         
         .nav-tab.active {
-            background: linear-gradient(45deg, var(--neon-blue), #2980b9);
-            color: white;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-            transform: translateY(-2px);
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue); color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
-        /* --- CONTENT AREA --- */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 1.5rem 5rem 1.5rem;
-        }
+        /* --- CONTENT --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 5rem 1.5rem; }
 
-        .section {
-            display: none;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .section { display: none; animation: slideUp 0.5s ease; }
         .section.active { display: block; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- CARDS --- */
         .cyber-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 1.5rem;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: 0.3s;
-            position: relative;
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            margin-bottom: 1.5rem; border-radius: 8px; overflow: hidden;
+            transition: 0.3s; position: relative;
         }
 
         .cyber-card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; height: 100%; width: 4px;
-            background: var(--neon-blue);
-            opacity: 0;
-            transition: 0.3s;
+            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 3px;
+            background: var(--neon-blue); opacity: 0.5; transition: 0.3s;
         }
 
-        .cyber-card:hover {
-            transform: translateX(5px);
-            border-color: rgba(0, 243, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .cyber-card:hover::before { opacity: 1; }
+        .cyber-card:hover { border-color: rgba(0, 243, 255, 0.4); transform: translateX(5px); }
+        .cyber-card:hover::before { opacity: 1; box-shadow: 0 0 10px var(--neon-blue); }
 
         .card-header {
-            padding: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 1.2rem 1.5rem; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);
         }
 
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 12px; }
+        .card-icon { width: 30px; text-align: center; }
 
         .card-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-            background: rgba(0,0,0,0.2);
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .cyber-card.open .card-content { max-height: 2000px; }
-        .cyber-card.open .card-header i.fa-chevron-down { transform: rotate(180deg); color: var(--neon-blue); }
+        .cyber-card.open .card-content { max-height: 2000px; } /* Increased for long content */
+        .cyber-card.open .card-header i.toggle-icon { transform: rotate(180deg); color: var(--neon-blue); }
 
-        .inner-padding { padding: 1.5rem; color: #ccc; line-height: 1.7; }
+        .inner-padding { padding: 1.5rem; color: #ccc; line-height: 1.6; font-size: 0.95rem; }
 
-        /* --- TOOLS & LABS (NEW!) --- */
-        .tool-panel {
-            background: #0a0a12;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .tool-input {
-            width: 100%;
-            background: #151520;
-            border: 1px solid #444;
-            color: var(--neon-green);
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-size: 1rem;
+        /* --- DEFINITION STYLES --- */
+        .def-term { color: var(--neon-blue); font-weight: bold; }
+        .def-box { 
+            background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 6px; 
+            border-left: 2px solid var(--neon-green); margin-bottom: 1rem; 
         }
         
+        /* --- TABLES --- */
+        .cyber-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+        .cyber-table th { text-align: left; border-bottom: 1px solid var(--neon-blue); padding: 8px; color: var(--neon-blue); }
+        .cyber-table td { border-bottom: 1px solid #333; padding: 8px; color: #ccc; }
+        .cyber-table tr:hover td { background: rgba(255,255,255,0.05); }
+
+        /* --- TAGS & BADGES --- */
+        .badge {
+            background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8em; color: var(--neon-orange);
+        }
+
+        /* --- TOOLS & LABS --- */
+        .tool-panel {
+            background: #0a0a12; border: 1px solid #333; border-radius: 8px;
+            padding: 1.5rem; margin-top: 1rem;
+        }
+        .tool-input {
+            width: 100%; background: #151520; border: 1px solid #444; color: var(--neon-green);
+            padding: 1rem; font-family: 'JetBrains Mono', monospace; border-radius: 6px; margin-bottom: 1rem;
+        }
         .tool-output {
-            background: #000;
-            border-left: 3px solid var(--neon-purple);
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            color: #fff;
-            min-height: 60px;
-            word-break: break-all;
+            background: #000; border-left: 3px solid var(--neon-purple); padding: 1rem;
+            font-family: 'JetBrains Mono', monospace; color: #fff; min-height: 60px; word-break: break-all;
         }
-
-        .tool-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-
         .tool-btn {
-            background: #222;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 5px 15px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            background: #222; color: #fff; border: 1px solid #444; padding: 8px 16px;
+            cursor: pointer; border-radius: 4px; font-size: 0.85rem; font-family: 'Orbitron', sans-serif;
         }
         .tool-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
 
-        /* --- QUIZ STYLES (NEW!) --- */
-        .quiz-container {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        
+        /* --- QUIZ --- */
+        .quiz-container { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 2rem; text-align: center; border: 1px solid #333; }
+        .quiz-options { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
         .quiz-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            color: white;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: 0.3s;
-            font-size: 1rem;
+            background: rgba(255,255,255,0.05); border: 1px solid #444; padding: 15px;
+            color: white; cursor: pointer; border-radius: 6px; text-align: left; transition: 0.2s;
         }
+        .quiz-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--neon-blue); }
+        .quiz-btn.correct { background: rgba(10, 255, 10, 0.15); border-color: var(--neon-green); color: var(--neon-green); }
+        .quiz-btn.wrong { background: rgba(255, 10, 10, 0.15); border-color: red; color: #ff5555; }
 
-        .quiz-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
-        .quiz-btn.correct { background: rgba(10, 255, 10, 0.2); border-color: var(--neon-green); }
-        .quiz-btn.wrong { background: rgba(255, 10, 10, 0.2); border-color: red; }
-
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 3rem 1rem;
-            border-top: 1px solid var(--glass-border);
-            background: #050505;
-            margin-top: auto;
-        }
-
-        /* --- PRINT MODE --- */
+        @media (min-width: 768px) { .quiz-options { grid-template-columns: 1fr 1fr; } }
         @media print {
-            body { background: white; color: black; }
-            #matrixCanvas, .nav-wrapper, header, .tool-panel, footer { display: none; }
-            .container { max-width: 100%; padding: 0; }
-            .section { display: block !important; opacity: 1 !important; transform: none !important; }
-            .cyber-card { border: 1px solid #ccc; break-inside: avoid; box-shadow: none; color: black; }
-            .card-content { max-height: none !important; display: block; color: black; }
-            .card-title { color: black; }
-            .inner-padding { color: black; }
-            a { text-decoration: underline; color: blue; }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .quiz-options { grid-template-columns: 1fr; }
-            .header-content { flex-direction: column; gap: 1rem; text-align: center; }
+            body { background: #fff; color: #000; }
+            #matrixCanvas, header, .nav-wrapper, .tool-panel { display: none; }
+            .section { display: block !important; opacity: 1 !important; }
+            .cyber-card { border: 1px solid #000; break-inside: avoid; box-shadow: none; margin-bottom: 20px; }
+            .card-content { max-height: none !important; color: #000; }
+            .card-title { color: #000; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+            .inner-padding { color: #000; }
         }
     </style>
 </head>
 <body>
 
-    <!-- FONDO ANIMADO MATRIX -->
     <canvas id="matrixCanvas"></canvas>
 
     <header>
         <div class="header-content">
             <div>
                 <div class="terminal-title">
-                    <span id="typewriter"></span><span class="cursor">&nbsp;</span>
+                    <span id="typewriter"></span><span class="cursor">_</span>
                 </div>
-                <div style="font-size: 0.8rem; color: #888; margin-top: 5px;">Dr. Johan Tapia, PhD | Security Awareness</div>
+                <div style="font-size: 0.8rem; color: #888; margin-top: 5px;">Dr. Johan Tapia, PhD | Repaso Final</div>
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="window.print()" class="btn-connect" style="border-color: #fff; color: #fff;">
-                    <i class="fas fa-file-pdf"></i> PDF
-                </button>
-                <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="btn-connect">
-                    <i class="fab fa-linkedin"></i> LinkedIn
+                <button onclick="window.print()" class="btn-header"><i class="fas fa-print"></i> PDF</button>
+                <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="btn-header">
+                    <i class="fab fa-linkedin"></i> Contacto
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- NAVEGACIÓN -->
     <div class="nav-wrapper">
         <button class="nav-tab active" onclick="switchTab('conceptos', this)"><i class="fas fa-shield-alt"></i> Conceptos</button>
         <button class="nav-tab" onclick="switchTab('amenazas', this)"><i class="fas fa-bug"></i> Amenazas</button>
-        <button class="nav-tab" onclick="switchTab('crypto', this)"><i class="fas fa-key"></i> Crypto-Lab</button>
-        <button class="nav-tab" onclick="switchTab('forense', this)"><i class="fas fa-search"></i> Forense</button>
-        <button class="nav-tab" onclick="switchTab('quiz', this)" style="border: 1px solid var(--neon-purple); color: var(--neon-purple);"><i class="fas fa-gamepad"></i> Challenge</button>
+        <button class="nav-tab" onclick="switchTab('crypto', this)"><i class="fas fa-key"></i> Cripto & Red</button>
+        <button class="nav-tab" onclick="switchTab('incidentes', this)"><i class="fas fa-fire-extinguisher"></i> Incidentes</button>
+        <button class="nav-tab" onclick="switchTab('forense-princ', this)"><i class="fas fa-balance-scale"></i> Forense: Principios</button>
+        <button class="nav-tab" onclick="switchTab('forense-art', this)"><i class="fas fa-search"></i> Forense: Artefactos</button>
+        <button class="nav-tab" onclick="switchTab('quiz', this)" style="border-color: var(--neon-purple); color: var(--neon-purple);"><i class="fas fa-gamepad"></i> Examen</button>
     </div>
 
     <div class="container">
 
-        <!-- ================= SECCIÓN CONCEPTOS ================= -->
+        <!-- ================= CONCEPTOS ================= -->
         <div id="conceptos" class="section active">
-            <div class="cyber-card">
+            <div class="cyber-card open">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-landmark" style="color:var(--neon-blue)"></i> Tríada CIA (Confidencialidad, Integridad, Disponibilidad)</div>
-                    <i class="fas fa-chevron-down" style="color:#666"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-landmark" style="color:var(--neon-blue)"></i></span>Integridad (Pilar CIA)</div>
+                    <i class="fas fa-chevron-down toggle-icon" style="color:#666"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <p>El modelo fundamental para la seguridad de la información. Piensa en ello como un taburete de tres patas; si una falta, te caes.</p>
-                    <ul style="margin-top:10px; padding-left:20px; list-style-type:square;">
-                        <li><strong>Confidencialidad:</strong> Solo tú puedes leer tus mensajes. (Ej: Cifrado).</li>
-                        <li><strong>Integridad:</strong> Nadie alteró el mensaje en el camino. (Ej: Hashing).</li>
-                        <li><strong>Disponibilidad:</strong> El sistema funciona cuando lo necesitas. (Ej: Protección DDoS).</li>
-                    </ul>
+                    <p><strong>Definición:</strong> Garantiza que la información es correcta, completa y no ha sido modificada por terceros no autorizados.</p>
+                    <div class="def-box" style="margin-top:10px;">
+                        <i class="fas fa-check-circle" style="color:var(--neon-green)"></i> Si un atacante modifica un archivo, ha violado la <strong>Integridad</strong>.
+                    </div>
                 </div></div>
             </div>
 
             <div class="cyber-card">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-exclamation-triangle" style="color:orange"></i> Riesgo = Amenaza x Vulnerabilidad</div>
-                    <i class="fas fa-chevron-down" style="color:#666"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-exclamation-triangle" style="color:var(--neon-orange)"></i></span>Vulnerabilidad vs Amenaza vs Riesgo</div>
+                    <i class="fas fa-chevron-down toggle-icon" style="color:#666"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <div style="background: rgba(255, 165, 0, 0.1); border-left: 3px solid orange; padding: 10px;">
-                        <p><strong>Ejemplo Real:</strong></p>
-                        <p>Dejar tu laptop desbloqueada en una cafetería (Vulnerabilidad) + Un ladrón entra (Amenaza) = Pérdida de datos (Riesgo Materializado).</p>
-                    </div>
+                    <table class="cyber-table">
+                        <tr><th>Término</th><th>Definición</th></tr>
+                        <tr>
+                            <td><span class="def-term">Vulnerabilidad</span></td>
+                            <td>Debilidad o fallo en el sistema (ej. software sin parchear).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="def-term">Amenaza</span></td>
+                            <td>Acción o evento que aprovecha una debilidad (ej. un hacker).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="def-term">Riesgo</span></td>
+                            <td>Probabilidad de que una amenaza explote una vulnerabilidad causando impacto.</td>
+                        </tr>
+                    </table>
                 </div></div>
             </div>
         </div>
 
-        <!-- ================= SECCIÓN AMENAZAS ================= -->
+        <!-- ================= AMENAZAS ================= -->
         <div id="amenazas" class="section">
             <div class="cyber-card">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-skull" style="color:var(--neon-green)"></i> Ransomware</div>
-                    <i class="fas fa-chevron-down" style="color:#666"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-skull" style="color:#ff4444"></i></span>Tipos de Malware</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <p>Secuestro digital. Malware que cifra archivos y pide rescate.</p>
-                    <br>
-                    <strong>Casos Famosos:</strong>
-                    <ul style="margin-left: 20px;">
-                        <li>🦠 <strong>WannaCry (2017):</strong> Afectó a 200,000 computadoras en 150 países usando una vulnerabilidad de Windows (EternalBlue).</li>
-                        <li>🦠 <strong>Colonial Pipeline (2021):</strong> Detuvo el suministro de gasolina en la costa este de EE.UU. por un password comprometido.</li>
+                    <table class="cyber-table">
+                        <tr><th>Malware</th><th>Comportamiento Clave</th></tr>
+                        <tr>
+                            <td><strong>Ransomware</strong></td>
+                            <td><span class="badge">Cifrado</span> Cifra archivos y pide rescate económico.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spyware</strong></td>
+                            <td><span class="badge">Espionaje</span> Recopila info sin consentimiento.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Botnet</strong></td>
+                            <td><span class="badge">Zombis</span> Red de equipos controlados remotamente.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rootkit</strong></td>
+                            <td><span class="badge">Ocultación</span> Se oculta en el kernel/sistema (Hooking).</td>
+                        </tr>
+                    </table>
+                </div></div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-box" style="color:#ffcc00"></i></span>Empaquetado (Packing)</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <p>Técnica usada por creadores de malware.</p>
+                    <p><strong>Propósito:</strong> Ofuscar el código, comprimirlo y cifrarlo para <strong>evadir la detección de antivirus</strong> y dificultar el análisis estático.</p>
+                </div></div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-user-secret" style="color:var(--neon-purple)"></i></span>Ingeniería Social</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <p><strong>Phishing:</strong> Correos engañosos suplantando identidad.</p>
+                    <p><strong>Objetivo:</strong> Robar credenciales o datos mediante engaño (el eslabón más débil es el humano).</p>
+                </div></div>
+            </div>
+        </div>
+
+        <!-- ================= CRIPTO & RED ================= -->
+        <div id="crypto" class="section">
+             <!-- Interactive Lab -->
+             <div class="tool-panel">
+                <h3 style="color:var(--neon-blue); margin-bottom:10px;">🧪 Laboratorio: UserAssist Decoder (ROT13)</h3>
+                <p style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">UserAssist usa ROT13 para ofuscar nombres de programas ejecutados.</p>
+                <input type="text" id="rotInput" class="tool-input" placeholder="Escribe algo (ej: cmd.exe) para aplicar ROT13..." oninput="applyRot13()">
+                <div id="rotOutput" class="tool-output">Resultado...</div>
+            </div>
+            <br>
+
+            <div class="cyber-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-key"></i></span>Criptografía Asimétrica & Firmas</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom:10px;">🔒 <strong>Confidencialidad:</strong> Juan cifra con la <span class="badge">Clave Pública de Ana</span>. Solo Ana puede descifrar con su Privada.</li>
+                        <li style="margin-bottom:10px;">✍️ <strong>Firma Digital:</strong> Garantiza <strong>Autenticidad, Integridad y No Repudio</strong> (NO Confidencialidad).</li>
+                        <li>#️⃣ <strong>Hash:</strong> Unidireccional. Si cambia un bit, cambia todo el hash.</li>
                     </ul>
                 </div></div>
             </div>
 
             <div class="cyber-card">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-user-secret" style="color: #ff0055"></i> Ingeniería Social</div>
-                    <i class="fas fa-chevron-down" style="color:#666"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-network-wired"></i></span>Red y Anonimato</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <p>Hackear humanos es más fácil que hackear firewalls.</p>
-                    <div class="tool-panel" style="margin-top:10px; border-color: #ff0055;">
-                        <h4 style="color:#ff0055; margin-bottom:10px;">🚩 Red Flags de Phishing:</h4>
-                        <ol style="margin-left:20px;">
-                            <li>Urgencia extrema ("¡Tu cuenta será borrada en 24h!").</li>
-                            <li>Remitente extraño (soporte@banc0-seguro.xyz).</li>
-                            <li>Solicitud de credenciales o pagos inusuales.</li>
-                        </ol>
+                    <p><strong style="color:var(--neon-green)">VPN:</strong> Crea un túnel cifrado en redes públicas.</p>
+                    <p><strong style="color:var(--neon-purple)">TOR:</strong> Protege el anonimato enrutando por múltiples nodos (capas de cebolla).</p>
+                    <p><strong style="color:var(--neon-orange)">Logs DHCP:</strong> Asocian una IP a una dirección MAC física en un momento dado (Atribución).</p>
+                </div></div>
+            </div>
+        </div>
+
+        <!-- ================= INCIDENTES ================= -->
+        <div id="incidentes" class="section">
+            <div class="cyber-card open">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-tasks"></i></span>Fases de Respuesta (NIST)</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <div style="border-left: 2px solid var(--neon-blue); padding-left:15px; margin-bottom:15px;">
+                        <h4 style="color:#fff">1. Contención 🛑</h4>
+                        <p>Objetivo: Detener la propagación. Limitar el alcance (desconectar red).</p>
+                    </div>
+                    <div style="border-left: 2px solid var(--neon-green); padding-left:15px; margin-bottom:15px;">
+                        <h4 style="color:#fff">2. Erradicación 🧹</h4>
+                        <p>Objetivo: <strong>Eliminar la amenaza</strong> (borrar malware, cerrar cuentas, parchar).</p>
+                    </div>
+                    <div class="def-box">
+                        <strong>Informe:</strong> El Resumen Ejecutivo debe evitar jerga técnica excesiva.
                     </div>
                 </div></div>
             </div>
         </div>
 
-        <!-- ================= SECCIÓN CRYPTO LAB ================= -->
-        <div id="crypto" class="section">
-            <div style="margin-bottom: 20px; border-left: 4px solid var(--neon-blue); padding-left: 15px;">
-                <h2 style="color: white;">Laboratorio de Cifrado</h2>
-                <p style="color: #aaa;">Prueba los algoritmos en tiempo real. Escribe abajo.</p>
-            </div>
-
-            <div class="tool-panel">
-                <div class="tool-controls">
-                    <button class="tool-btn" onclick="setMode('base64')">Base64</button>
-                    <button class="tool-btn" onclick="setMode('hex')">Hexadecimal</button>
-                    <button class="tool-btn" onclick="setMode('binary')">Binario</button>
-                    <button class="tool-btn" onclick="setMode('rot13')">ROT13 (César)</button>
-                </div>
-                
-                <input type="text" id="cryptoInput" class="tool-input" placeholder="Escribe tu mensaje secreto aquí..." oninput="processCrypto()">
-                
-                <div style="display:flex; justify-content:space-between; color: #666; font-size: 0.8rem; margin-bottom: 5px;">
-                    <span>SALIDA (<span id="currentMode">Base64</span>):</span>
-                    <span style="cursor:pointer; color:var(--neon-blue)" onclick="copyToClipboard()">[COPIAR]</span>
-                </div>
-                <div id="cryptoOutput" class="tool-output">Esperando entrada...</div>
-            </div>
-
-            <div class="cyber-card" style="margin-top: 2rem;">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-book"></i> Teoría de Hashing</div>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding">
-                    <p>Un Hash es como una huella digital digital. Es unidireccional (no puedes volver atrás).</p>
-                    <p><strong>Uso:</strong> Almacenar contraseñas. Nunca guardes passwords en texto plano.</p>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN FORENSE ================= -->
-        <div id="forense" class="section">
+        <!-- ================= FORENSE PRINCIPIOS ================= -->
+        <div id="forense-princ" class="section">
             <div class="cyber-card">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-microscope" style="color:var(--neon-purple)"></i> Evidencia Volátil</div>
-                    <i class="fas fa-chevron-down"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-sort-amount-down"></i></span>Orden de Volatilidad (RFC 3227)</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <p>Orden de recolección (RFC 3227): De lo más volátil a lo menos volátil.</p>
-                    <ol style="margin-left:20px; margin-top:10px;">
-                        <li>⚡ Registros de CPU y Caché.</li>
-                        <li>🧠 Memoria RAM (¡Se pierde al apagar!).</li>
-                        <li>💾 Disco Duro / SSD.</li>
-                        <li>💿 Backups y medios externos.</li>
+                    <p>Recolección de lo más fugaz a lo más permanente:</p>
+                    <ol style="margin-left:20px; color:var(--neon-green);">
+                        <li><strong>Memoria RAM</strong> (Se pierde al apagar).</li>
+                        <li><strong>Disco Duro</strong> (Datos persistentes).</li>
+                        <li><strong>Backups / Archivos</strong>.</li>
                     </ol>
                 </div></div>
             </div>
-            
+
             <div class="cyber-card">
                 <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-mask"></i> Esteganografía</div>
-                    <i class="fas fa-chevron-down"></i>
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-link"></i></span>Fundamentos Legales</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="card-content"><div class="inner-padding">
-                    <p>El arte de ocultar información dentro de otros archivos (como una imagen o un audio) para que pase desapercibida.</p>
+                    <p><strong>Cadena de Custodia:</strong> Documentación cronológica vital para garantizar la integridad y validez legal.</p>
+                    <p><strong>Write Blocker:</strong> Hardware que impide modificar el disco de evidencia al conectarlo.</p>
+                </div></div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-microscope"></i></span>Tipos de Análisis</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <p><strong>Estático:</strong> Analizar código/estructura SIN ejecutarlo.</p>
+                    <p><strong>Dinámico:</strong> Ejecutar y observar (Process Monitor - ProcMon).</p>
+                    <p><strong>Time Stomping:</strong> Técnica anti-forense que modifica fechas de archivos para ocultarlos.</p>
                 </div></div>
             </div>
         </div>
 
-        <!-- ================= SECCIÓN QUIZ CHALLENGE ================= -->
+        <!-- ================= FORENSE ARTEFACTOS (WINDOWS) ================= -->
+        <div id="forense-art" class="section">
+            <div class="cyber-card open">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-database"></i></span>Registro de Windows (Hives)</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <table class="cyber-table">
+                        <tr><th>Hive</th><th>Contenido</th></tr>
+                        <tr><td>HKLM</td><td>Local Machine: Config global y hardware.</td></tr>
+                        <tr><td>HKCU</td><td>Current User: Usuario actual logueado.</td></tr>
+                        <tr><td>HKU</td><td>Users: Todos los perfiles.</td></tr>
+                        <tr><td>HKCC</td><td>Current Config: Perfil de hardware actual.</td></tr>
+                    </table>
+                    <p style="margin-top:10px;"><strong>Shellbags:</strong> Prueban acceso a carpetas (incluso USBs desconectados).</p>
+                    <p><strong>UserAssist:</strong> Ejecución de programas (usa ROT13).</p>
+                </div></div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><span class="card-icon"><i class="fas fa-file-alt"></i></span>Archivos de Sistema</div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content"><div class="inner-padding">
+                    <ul style="list-style:none;">
+                        <li>💾 <strong>$MFT:</strong> Tabla Maestra de Archivos. Índice central de NTFS con metadatos.</li>
+                        <li>🗑️ <strong>Papelera:</strong> 
+                            <br>&nbsp;&nbsp;📄 <code>$I</code> (Metadatos/Ruta)
+                            <br>&nbsp;&nbsp;📄 <code>$R</code> (Contenido real)
+                        </li>
+                        <li>🚀 <strong>Prefetch (.pf):</strong> Prueba ejecución (Nombre, fecha, frecuencia).</li>
+                        <li>💤 <strong>Hiberfil.sys:</strong> Copia comprimida de RAM al hibernar.</li>
+                        <li>📃 <strong>Pagefile.sys:</strong> Memoria virtual en disco (datos volátiles).</li>
+                        <li>🆔 <strong>Event ID 4624:</strong> Inicio de sesión exitoso.</li>
+                    </ul>
+                </div></div>
+            </div>
+        </div>
+
+        <!-- ================= QUIZ ================= -->
         <div id="quiz" class="section">
             <div class="quiz-container">
-                <i class="fas fa-brain" style="font-size: 3rem; color: var(--neon-purple); margin-bottom: 1rem;"></i>
-                <h2 style="color: white; margin-bottom: 1rem;">Cyber Challenge v1.0</h2>
-                <p style="color: #aaa; margin-bottom: 2rem;">¿Estás listo para el examen? Demuestra lo que sabes.</p>
-                
+                <h2 style="color:var(--neon-blue)">Simulador de Examen</h2>
                 <div id="quiz-box">
-                    <h3 id="question-text" style="color: white; font-size: 1.3rem;">Cargando...</h3>
-                    <div id="options-container" class="quiz-options">
-                        <!-- Opciones generadas por JS -->
-                    </div>
-                    <p id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 25px;"></p>
-                    <button onclick="nextQuestion()" id="next-btn" class="tool-btn" style="display:none; margin: 20px auto; padding: 10px 30px; font-size:1rem;">Siguiente Pregunta</button>
+                    <p id="question-text" style="font-size:1.1rem; margin: 20px 0; min-height:60px;">Pregunta...</p>
+                    <div id="options-container" class="quiz-options"></div>
+                    <p id="feedback" style="margin-top:20px; font-weight:bold; height:20px;"></p>
+                    <button onclick="nextQuestion()" id="next-btn" class="tool-btn" style="display:none; margin: 20px auto;">Siguiente ➡️</button>
                 </div>
-
                 <div id="score-box" style="display:none;">
-                    <h2 id="final-score" style="color: var(--neon-green); font-size: 2rem;"></h2>
-                    <button onclick="restartQuiz()" class="tool-btn" style="margin-top:20px;">Intentar de nuevo</button>
+                    <h2 id="final-score" style="font-size:2rem; color:var(--neon-green)"></h2>
+                    <button onclick="restartQuiz()" class="tool-btn">Reiniciar</button>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <footer>
-        <p>Desarrollado para la Excelencia Académica</p>
-        <p style="color: #666; margin-top: 10px;">© 2025 Dr. Johan Tapia, PhD</p>
-    </footer>
-
     <script>
-        // --- TYPEWRITER EFFECT ---
-        const text = ">> Inicializando Aula Magistral: Ciberseguridad...";
+        // --- TYPEWRITER ---
+        const text = ">> Accessing Cybersec Knowledge Base...";
         let i = 0;
         function typeWriter() {
             if (i < text.length) {
                 document.getElementById("typewriter").innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
+                i++; setTimeout(typeWriter, 50);
             }
         }
-        window.onload = function() {
-            typeWriter();
-            initMatrix(); // Start matrix effect
-            loadQuestion(); // Prepare quiz
-        };
-
-        // --- TAB NAVIGATION ---
+        
+        // --- TABS & ACCORDION ---
         function switchTab(tabId, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
+        
+        function toggleCard(header) { header.parentElement.classList.toggle('open'); }
 
-        // --- ACCORDION ---
-        function toggleCard(header) {
-            header.parentElement.classList.toggle('open');
+        // --- ROT13 TOOL ---
+        function applyRot13() {
+            const input = document.getElementById('rotInput').value;
+            const output = input.replace(/[a-zA-Z]/g, function (c) {
+                return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+            });
+            document.getElementById('rotOutput').innerText = output || "Resultado...";
         }
 
-        // --- CRYPTO LAB LOGIC ---
-        let currentMode = 'base64';
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('currentMode').innerText = mode.toUpperCase();
-            processCrypto();
-        }
-
-        function processCrypto() {
-            const input = document.getElementById('cryptoInput').value;
-            const outputDiv = document.getElementById('cryptoOutput');
-            
-            if(!input) { outputDiv.innerText = "Esperando entrada..."; return; }
-
-            try {
-                let result = '';
-                if(currentMode === 'base64') {
-                    result = btoa(input);
-                } else if (currentMode === 'hex') {
-                    for (let i = 0; i < input.length; i++) {
-                        result += input.charCodeAt(i).toString(16) + " ";
-                    }
-                } else if (currentMode === 'binary') {
-                    for (let i = 0; i < input.length; i++) {
-                        result += input.charCodeAt(i).toString(2).padStart(8, '0') + " ";
-                    }
-                } else if (currentMode === 'rot13') {
-                    result = input.replace(/[a-zA-Z]/g, function (c) {
-                        return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
-                    });
-                }
-                outputDiv.innerText = result;
-            } catch (e) {
-                outputDiv.innerText = "Error: Caracteres no soportados para este algoritmo.";
-            }
-        }
-
-        function copyToClipboard() {
-            const text = document.getElementById('cryptoOutput').innerText;
-            navigator.clipboard.writeText(text);
-            alert("¡Copiado al portapapeles!");
-        }
-
-        // --- QUIZ GAME LOGIC ---
+        // --- EXAM QUESTIONS (FROM YOUR FILE) ---
         const questions = [
-            { q: "¿Qué propiedad de la CIA se viola si un hacker modifica un archivo?", a: ["Integridad", "Confidencialidad", "Disponibilidad", "Autenticación"], c: 0 },
-            { q: "¿Qué tipo de malware pide un rescate económico?", a: ["Spyware", "Ransomware", "Adware", "Rootkit"], c: 1 },
-            { q: "¿Cuál es el primer paso en la respuesta a incidentes?", a: ["Contención", "Erradicación", "Preparación", "Lecciones aprendidas"], c: 2 },
-            { q: "¿Qué hace un Write Blocker en forense?", a: ["Borra datos", "Impide escritura en el disco", "Cifra el disco", "Acelera la copia"], c: 1 },
-            { q: "¿Qué algoritmo es Simétrico?", a: ["RSA", "ECC", "AES", "SHA-256"], c: 2 }
+            { q: "¿Qué pilar garantiza que la info no ha sido modificada?", a: ["Integridad", "Confidencialidad", "Disponibilidad"], c: 0 },
+            { q: "Diferencia: Vulnerabilidad vs Amenaza", a: ["Vuln. es debilidad interna, Amenaza es acción externa", "Son sinónimos", "Amenaza es siempre interna"], c: 0 },
+            { q: "¿Qué malware pide rescate económico?", a: ["Spyware", "Ransomware", "Adware"], c: 1 },
+            { q: "Para enviar confidencial a Ana (Asimétrico), ¿con qué cifro?", a: ["Privada de Ana", "Pública de Ana", "Pública de Juan"], c: 1 },
+            { q: "Propósito de Firma Digital", a: ["Confidencialidad", "Autenticidad e Integridad", "Cifrar el disco"], c: 1 },
+            { q: "Característica fundamental de un Hash", a: ["Es reversible", "Es unidireccional", "Longitud variable"], c: 1 },
+            { q: "¿Qué fase elimina la amenaza (borrar malware)?", a: ["Contención", "Erradicación", "Recuperación"], c: 1 },
+            { q: "Orden de Volatilidad correcto", a: ["Disco -> RAM", "RAM -> Disco -> Backup", "Backup -> RAM"], c: 1 },
+            { q: "¿Qué hace un Write Blocker?", a: ["Impide escritura en evidencia", "Cifra datos", "Borra malware"], c: 0 },
+            { q: "Clave de Registro para el Usuario Actual", a: ["HKLM", "HKCU", "HKCC"], c: 1 },
+            { q: "¿Qué guarda Prefetch (.pf)?", a: ["Ejecución de apps (nombre, fecha)", "Texto de Word", "Historial web"], c: 0 },
+            { q: "Archivos creados en Papelera (Win 7+)", a: ["$Deleted y $Real", "$I (meta) y $R (data)", "Solo $Trash"], c: 1 },
+            { q: "¿Qué técnica usa UserAssist para ocultar nombres?", a: ["AES", "ROT13", "Base64"], c: 1 },
+            { q: "¿Qué hace el Time Stomping?", a: ["Borra logs", "Modifica fechas de archivos", "Cifra RAM"], c: 1 },
+            { q: "Event ID 4624 significa:", a: ["Login Fallido", "Login Exitoso", "Servicio Creado"], c: 1 }
         ];
 
-        let currentQ = 0;
-        let score = 0;
+        let currentQ = 0, score = 0;
 
         function loadQuestion() {
             const q = questions[currentQ];
-            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('question-text').innerText = (currentQ + 1) + ". " + q.q;
             const opts = document.getElementById('options-container');
             opts.innerHTML = '';
-            
-            q.a.forEach((opt, index) => {
+            q.a.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = 'quiz-btn';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(index, btn);
+                btn.className = 'quiz-btn'; btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
                 opts.appendChild(btn);
             });
         }
 
-        function checkAnswer(index, btn) {
-            // Disable all buttons
+        function checkAnswer(idx, btn) {
             const btns = document.querySelectorAll('.quiz-btn');
             btns.forEach(b => b.disabled = true);
-
-            if(index === questions[currentQ].c) {
-                btn.classList.add('correct');
-                document.getElementById('feedback').innerHTML = "<span style='color:var(--neon-green)'>¡Correcto! +10 Puntos</span>";
-                score += 10;
+            if(idx === questions[currentQ].c) {
+                btn.classList.add('correct'); score++;
+                document.getElementById('feedback').innerHTML = "<span style='color:var(--neon-green)'>¡Correcto!</span>";
             } else {
                 btn.classList.add('wrong');
-                btns[questions[currentQ].c].classList.add('correct'); // Show correct one
-                document.getElementById('feedback').innerHTML = "<span style='color:red'>Incorrecto.</span>";
+                btns[questions[currentQ].c].classList.add('correct');
+                document.getElementById('feedback').innerHTML = "<span style='color:red'>Incorrecto</span>";
             }
             document.getElementById('next-btn').style.display = 'block';
         }
@@ -633,66 +566,39 @@
             currentQ++;
             document.getElementById('next-btn').style.display = 'none';
             document.getElementById('feedback').innerText = "";
-            
-            if(currentQ < questions.length) {
-                loadQuestion();
-            } else {
-                document.getElementById('quiz-box').style.display = 'none';
-                document.getElementById('score-box').style.display = 'block';
-                document.getElementById('final-score').innerText = `Puntaje Final: ${score} / ${questions.length * 10}`;
-            }
+            if(currentQ < questions.length) loadQuestion();
+            else showScore();
+        }
+
+        function showScore() {
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('score-box').style.display = 'block';
+            document.getElementById('final-score').innerText = `${score} / ${questions.length}`;
         }
 
         function restartQuiz() {
-            currentQ = 0;
-            score = 0;
+            currentQ = 0; score = 0;
             document.getElementById('score-box').style.display = 'none';
             document.getElementById('quiz-box').style.display = 'block';
             loadQuestion();
         }
 
-        // --- MATRIX BACKGROUND EFFECT ---
-        function initMatrix() {
-            const canvas = document.getElementById('matrixCanvas');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const nums = '0123456789';
-            const alphabet = katakana + latin + nums;
-
-            const fontSize = 16;
-            const columns = canvas.width/fontSize;
-            const drops = [];
-
-            for(let x = 0; x < columns; x++) drops[x] = 1;
-
-            const draw = () => {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = '#0F0'; // Green text
-                ctx.font = fontSize + 'px monospace';
-
-                for(let i = 0; i < drops.length; i++) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-                    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-                        drops[i] = 0;
+        // --- MATRIX EFFECT ---
+        window.onload = function() {
+            typeWriter(); loadQuestion();
+            const cvs = document.getElementById('matrixCanvas'), ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+            const cols = cvs.width/20, drops = Array(Math.floor(cols)).fill(1);
+            setInterval(() => {
+                ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,cvs.width,cvs.height);
+                ctx.fillStyle = '#0F0'; ctx.font = '15px monospace';
+                drops.forEach((y, i) => {
+                    ctx.fillText(String.fromCharCode(0x30A0+Math.random()*96), i*20, y*20);
+                    if(y*20 > cvs.height && Math.random()>0.975) drops[i]=0;
                     drops[i]++;
-                }
-            };
-            setInterval(draw, 30);
-            
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        }
+                });
+            }, 50);
+        };
     </script>
 </body>
 </html>
