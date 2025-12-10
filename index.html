@@ -1,587 +1,166 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma Educativa Ciberseguridad | Dr. Johan Tapia</title>
-    
-    <!-- Fuentes y Estilos -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --neon-blue: #00f3ff;
-            --neon-green: #0aff0a;
-            --neon-purple: #bc13fe;
-            --neon-red: #ff2a2a;
-            --dark-bg: #0b0c10;
-            --card-bg: #1f2833;
-            --text-main: #c5c6c7;
-            --highlight: #66fcf1;
-            --border-radius: 8px;
-        }
+<style>
+    /* ... (Mantén tus variables :root anteriores) ... */
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* --- MODERN HEADER STYLES --- */
+    .cyber-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: rgba(10, 15, 30, 0.75); /* Fondo semitransparente */
+        backdrop-filter: blur(12px); /* Efecto vidrio borroso */
+        border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+        position: sticky; /* Se queda fijo al hacer scroll */
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+    /* Izquierda: Títulos */
+    .header-branding h1 {
+        font-family: 'Orbitron';
+        font-size: 1.8rem;
+        margin: 0;
+        background: linear-gradient(90deg, #fff, var(--neon-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    }
+    .header-subtitle {
+        font-family: 'JetBrains Mono';
+        font-size: 0.75rem;
+        color: var(--neon-purple);
+        letter-spacing: 1px;
+        margin-top: 2px;
+    }
 
-        /* --- MATRIX BACKGROUND --- */
-        #matrixCanvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.05; pointer-events: none;
-        }
+    /* Centro: Buscador Avanzado */
+    .search-container {
+        position: relative;
+        flex-grow: 1;
+        max-width: 500px;
+        margin: 0 2rem;
+    }
+    .cyber-input {
+        width: 100%;
+        padding: 10px 45px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid #333;
+        border-radius: 4px;
+        color: var(--neon-blue);
+        font-family: 'JetBrains Mono';
+        transition: all 0.3s ease;
+    }
+    .cyber-input:focus {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        background: rgba(0, 10, 20, 0.8);
+    }
+    .search-icon-btn {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        pointer-events: none;
+        transition: 0.3s;
+    }
+    .cyber-input:focus + .search-icon-btn { color: var(--neon-blue); }
 
-        /* --- SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #45a29e; border-radius: 5px; }
+    /* Derecha: Panel de Control */
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-        /* --- HEADER --- */
-        header {
-            background: rgba(11, 12, 16, 0.95);
-            border-bottom: 2px solid var(--highlight);
-            padding: 1.5rem;
-            position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
-        }
+    /* Indicador de Estado */
+    .system-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'JetBrains Mono';
+        font-size: 0.75rem;
+        color: #0f0;
+        background: rgba(0, 255, 0, 0.05);
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 255, 0, 0.2);
+    }
+    .status-dot {
+        width: 8px; height: 8px;
+        background-color: #0f0;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #0f0;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .header-content {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
-        }
+    /* Botones de Acción */
+    .action-btn {
+        background: transparent;
+        border: 1px solid #444;
+        color: #aaa;
+        width: 35px; height: 35px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .action-btn:hover {
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+    }
 
-        .brand-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    /* Ajuste para móviles */
+    @media (max-width: 768px) {
+        .cyber-header { flex-direction: column; gap: 15px; align-items: stretch; }
+        .header-branding { text-align: center; }
+        .search-container { margin: 0; max-width: 100%; }
+        .header-controls { justify-content: space-between; }
+    }
+</style>
 
-        .brand-subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--highlight);
-            font-size: 0.9rem;
-        }
-
-        .linkedin-btn {
-            background: #0077b5; color: white; padding: 8px 16px; border-radius: 4px;
-            text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;
-            transition: 0.3s; font-size: 0.9rem;
-        }
-        .linkedin-btn:hover { background: #005582; transform: translateY(-2px); }
-
-        /* --- NAVIGATION --- */
-        .nav-wrapper {
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
-            padding: 2rem 1rem; max-width: 1200px; margin: 0 auto;
-        }
-
-        .nav-tab {
-            background: transparent; border: 1px solid #45a29e; color: #45a29e;
-            padding: 10px 20px; cursor: pointer; font-family: 'Orbitron', sans-serif;
-            transition: 0.3s; font-size: 0.9rem; border-radius: 4px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .nav-tab:hover { background: rgba(69, 162, 158, 0.2); }
-        .nav-tab.active {
-            background: var(--highlight); color: #0b0c10; border-color: var(--highlight);
-            font-weight: 700; box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
-        }
-
-        /* --- CONTENT AREA --- */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 5rem 1.5rem; }
-        .section { display: none; animation: fadeIn 0.5s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- CARDS --- */
-        .cyber-card {
-            background: var(--card-bg); border-radius: var(--border-radius);
-            margin-bottom: 1.5rem; border-left: 4px solid var(--highlight);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.03); transition: background 0.3s;
-        }
-        .card-header:hover { background: rgba(255,255,255,0.08); }
-        
-        .card-title { font-size: 1.3rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 12px; }
-        
-        .card-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
-        .cyber-card.open .card-content { max-height: 3000px; } /* Altura suficiente para texto largo */
-        .cyber-card.open .card-header i.toggle-icon { transform: rotate(180deg); color: var(--highlight); }
-
-        .inner-padding { padding: 2rem; }
-
-        /* --- TEXT STYLES & CITATIONS --- */
-        .text-content p { margin-bottom: 1rem; text-align: justify; }
-        .highlight-term { color: var(--highlight); font-weight: bold; }
-        
-        .citation {
-            font-size: 0.8rem; color: #888; border-top: 1px solid #444;
-            padding-top: 10px; margin-top: 20px; font-style: italic;
-        }
-
-        /* --- EXTERNAL RESOURCES BUTTONS --- */
-        .resource-box {
-            background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;
-            border: 1px dashed #555;
-        }
-        .resource-btn {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: #2c3e50; color: #fff; padding: 10px 20px;
-            text-decoration: none; border-radius: 4px; transition: 0.3s;
-            margin-right: 10px; margin-bottom: 10px; font-size: 0.9rem;
-            border: 1px solid #444;
-        }
-        .resource-btn:hover { background: var(--highlight); color: #000; border-color: var(--highlight); }
-
-        /* --- TABLES --- */
-        .cyber-table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: rgba(0,0,0,0.2); }
-        .cyber-table th { text-align: left; padding: 12px; background: #2c3e50; color: #fff; border-bottom: 2px solid var(--highlight); }
-        .cyber-table td { padding: 12px; border-bottom: 1px solid #444; vertical-align: top; }
-
-        /* --- LAB TOOLS --- */
-        .tool-panel { background: #121212; padding: 1.5rem; border-radius: 8px; border: 1px solid #333; }
-        .tool-input { width: 100%; padding: 10px; background: #000; color: var(--highlight); border: 1px solid #444; font-family: monospace; margin-bottom: 10px; }
-        .tool-output { padding: 10px; background: #000; color: #fff; border-left: 3px solid var(--neon-purple); font-family: monospace; min-height: 40px; }
-
-        /* --- QUIZ --- */
-        .quiz-container { background: #1c1c24; padding: 2rem; border-radius: 8px; text-align: center; }
-        .quiz-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #2b2b36; border: none; color: #fff; cursor: pointer; text-align: left; transition: 0.2s; border-radius: 4px; }
-        .quiz-btn:hover { background: #3b3b4a; }
-        .quiz-btn.correct { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; }
-        .quiz-btn.wrong { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; }
-
-        /* --- WARGAMES GRID --- */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .grid-item { background: #1c1c24; padding: 20px; border-radius: 8px; transition: 0.3s; border-top: 3px solid #45a29e; }
-        .grid-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-
-    </style>
-</head>
-<body>
-
-    <canvas id="matrixCanvas"></canvas>
-
-    <header>
-        <div class="header-content">
-            <div>
-                <div class="brand-title">CIBERSEGURIDAD <span style="color:var(--highlight)">360º</span></div>
-                <div class="brand-subtitle">Plataforma Educativa Universitaria | Dr. Johan Tapia</div>
-            </div>
-            <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="linkedin-btn">
-                <i class="fab fa-linkedin"></i> Conectar en LinkedIn
-            </a>
+<header class="cyber-header">
+    <div class="header-branding">
+        <h1>SEAUCI <span style="font-weight:300; font-size: 0.8em; opacity:0.8;">CORE</span></h1>
+        <div class="header-subtitle">
+            <i class="fas fa-terminal" style="font-size:0.8em"></i> SYS.ADMIN: DR. JOHAN TAPIA
         </div>
-    </header>
-
-    <div class="nav-wrapper">
-        <button class="nav-tab active" onclick="switchTab('conceptos', this)"><i class="fas fa-book"></i> Conceptos</button>
-        <button class="nav-tab" onclick="switchTab('amenazas', this)"><i class="fas fa-virus"></i> Amenazas</button>
-        <button class="nav-tab" onclick="switchTab('crypto', this)"><i class="fas fa-key"></i> Criptografía</button>
-        <button class="nav-tab" onclick="switchTab('incidentes', this)"><i class="fas fa-user-shield"></i> Incidentes</button>
-        <button class="nav-tab" onclick="switchTab('forense', this)"><i class="fas fa-search"></i> Forense</button>
-        <button class="nav-tab" onclick="switchTab('wargames', this)"><i class="fas fa-gamepad"></i> Práctica (Wargames)</button>
-        <button class="nav-tab" onclick="switchTab('quiz', this)" style="border-color: var(--neon-purple); color: var(--neon-purple);"><i class="fas fa-question-circle"></i> Examen</button>
     </div>
 
-    <div class="container">
-
-        <!-- ================= SECCIÓN 1: CONCEPTOS ================= -->
-        <div id="conceptos" class="section active">
-            <div class="cyber-card open">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-shield-alt"></i> La Tríada CIA (Confidencialidad, Integridad, Disponibilidad)</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>La Tríada CIA es el modelo fundamental para el desarrollo de políticas de seguridad. Según la norma <span class="highlight-term">ISO/IEC 27000</span>, estos tres pilares deben preservarse:</p>
-                    <ul>
-                        <li><strong>Confidencialidad:</strong> Propiedad de que la información no se pone a disposición ni se revela a individuos, entidades o procesos no autorizados.</li>
-                        <li><strong>Integridad:</strong> Propiedad de exactitud y completitud. Garantiza que los datos no han sido modificados sin autorización.</li>
-                        <li><strong>Disponibilidad:</strong> Propiedad de ser accesible y utilizable por una entidad autorizada cuando lo requiera.</li>
-                    </ul>
-                    
-                    <div class="resource-box">
-                        <h4><i class="fas fa-book-open"></i> Recursos Adicionales (Español):</h4>
-                        <a href="https://www.incibe.es/aprende-ciberseguridad/conceptos-basicos" target="_blank" class="resource-btn">
-                            <i class="fas fa-external-link-alt"></i> Conceptos Básicos INCIBE
-                        </a>
-                        <a href="https://es.wikipedia.org/wiki/Seguridad_de_la_informaci%C3%B3n" target="_blank" class="resource-btn">
-                            <i class="fab fa-wikipedia-w"></i> Definición Wikipedia
-                        </a>
-                    </div>
-
-                    <div class="citation">
-                        Fuente: International Organization for Standardization. (2018). *Information technology — Security techniques — Information security management systems — Overview and vocabulary* (ISO/IEC 27000:2018).
-                    </div>
-                </div></div>
-            </div>
-
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Vulnerabilidad, Amenaza y Riesgo</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>Es crucial diferenciar estos términos para la gestión de riesgos:</p>
-                    <table class="cyber-table">
-                        <tr>
-                            <th>Término</th>
-                            <th>Definición Académica</th>
-                            <th>Ejemplo Práctico</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Vulnerabilidad</strong></td>
-                            <td>Debilidad de un activo o control que puede ser explotada (ISO 27000).</td>
-                            <td>Un servidor web sin actualizar (Software obsoleto).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amenaza</strong></td>
-                            <td>Causa potencial de un incidente no deseado, que puede dañar un sistema u organización.</td>
-                            <td>Un hacker intentando inyectar código SQL.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Riesgo</strong></td>
-                            <td>Efecto de la incertidumbre sobre los objetivos. Se calcula a menudo como: <em>Riesgo = Probabilidad x Impacto</em>.</td>
-                            <td>Alta probabilidad de robo de base de datos de clientes.</td>
-                        </tr>
-                    </table>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 2: AMENAZAS ================= -->
-        <div id="amenazas" class="section">
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-skull-crossbones"></i> Malware: Ransomware y Rootkits</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p><strong>Ransomware:</strong> Tipo de código malicioso diseñado para negar el acceso a un sistema informático o a los datos hasta que se pague un rescate. Utiliza cifrado robusto para bloquear los archivos de la víctima.</p>
-                    <p><strong>Rootkit:</strong> Conjunto de herramientas de software que permiten a un usuario no autorizado mantener el control de un sistema informático sin ser detectado, a menudo ocultándose en el núcleo (kernel) del sistema operativo.</p>
-                    
-                    <div class="resource-box">
-                        <h4><i class="fas fa-video"></i> Aprende Más (Español):</h4>
-                        <a href="https://www.incibe.es/ciudadania/tematicas/ransomware" target="_blank" class="resource-btn">
-                            <i class="fas fa-link"></i> Guía INCIBE: Todo sobre Ransomware
-                        </a>
-                        <a href="https://www.welivesecurity.com/la-es/2014/06/13/rootkit-que-es-como-funciona/" target="_blank" class="resource-btn">
-                            <i class="fas fa-link"></i> ESET: ¿Qué es un Rootkit?
-                        </a>
-                    </div>
-                    
-                    <div class="citation">
-                        Fuente: National Institute of Standards and Technology (NIST). (2013). *Glossary of Key Information Security Terms* (NIST IR 7298 Rev. 2).
-                    </div>
-                </div></div>
-            </div>
-
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-user-secret"></i> Ingeniería Social</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>La ingeniería social es el arte de manipular a las personas para que cedan información confidencial. Los tipos de ataques incluyen <strong>Phishing</strong>, <strong>Pretexting</strong>, <strong>Baiting</strong> y <strong>Quid pro quo</strong>.</p>
-                    <p class="highlight-term">¡El ser humano suele ser el eslabón más débil en la cadena de seguridad!</p>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 3: CRIPTOGRAFÍA ================= -->
-        <div id="crypto" class="section">
-            <div class="tool-panel">
-                <h4><i class="fas fa-tools"></i> Herramienta: Codificador ROT13</h4>
-                <p style="font-size: 0.9rem; color:#aaa; margin-bottom:10px;">UserAssist en Windows usa ROT13 para ofuscar nombres de programas. Pruébalo aquí:</p>
-                <input type="text" id="rotInput" class="tool-input" placeholder="Escribe texto aquí..." oninput="applyRot13()">
-                <div id="rotOutput" class="tool-output">Resultado...</div>
-            </div>
-            <br>
-            
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-key"></i> Conceptos Criptográficos</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p><strong>Función Hash:</strong> Un algoritmo matemático que transforma cualquier bloque de datos en una serie de caracteres de longitud fija. Es <em>unidireccional</em> (no reversible). Es vital para verificar la <strong>Integridad</strong>.</p>
-                    <p><strong>Cifrado Asimétrico (Clave Pública):</strong> Utiliza dos claves matemáticas relacionadas: una pública (para cifrar) y una privada (para descifrar). Es la base de la seguridad en Internet (HTTPS/TLS).</p>
-                    
-                    <div class="resource-box">
-                        <a href="https://latam.kaspersky.com/resource-center/definitions/what-is-cryptography" target="_blank" class="resource-btn">
-                            <i class="fas fa-book"></i> Kaspersky: Definición de Criptografía
-                        </a>
-                    </div>
-
-                    <div class="citation">
-                        Fuente: Stallings, W. (2017). *Cryptography and Network Security: Principles and Practice* (7th Ed.). Pearson.
-                    </div>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 4: INCIDENTES ================= -->
-        <div id="incidentes" class="section">
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-fire-extinguisher"></i> Ciclo de Vida de Respuesta (NIST)</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>El marco del NIST (SP 800-61) define cuatro fases principales para la gestión de incidentes:</p>
-                    <ol>
-                        <li><strong>Preparación:</strong> Establecer capacidad de respuesta (herramientas, equipo, políticas).</li>
-                        <li><strong>Detección y Análisis:</strong> Monitorización, alertas SIEM, triaje y determinación del alcance.</li>
-                        <li><strong>Contención, Erradicación y Recuperación:</strong> Detener la propagación (aislar redes), eliminar la causa raíz (malware) y restaurar servicios.</li>
-                        <li><strong>Actividad Post-Incidente:</strong> Lecciones aprendidas y mejora del proceso.</li>
-                    </ol>
-
-                    <div class="resource-box">
-                         <a href="https://csrc.nist.gov/pubs/sp/800/61/r2/final" target="_blank" class="resource-btn">
-                            <i class="fas fa-file-pdf"></i> NIST SP 800-61 (Doc Oficial Inglés)
-                        </a>
-                        <a href="https://www.manageengine.com/latam/log-management/cyber-security/incident-response-plan.html" target="_blank" class="resource-btn">
-                            <i class="fas fa-list-alt"></i> Guía en Español (ManageEngine)
-                        </a>
-                    </div>
-
-                    <div class="citation">
-                        Fuente: Cichonski, P., et al. (2012). *Computer Security Incident Handling Guide* (NIST SP 800-61 Rev. 2).
-                    </div>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 5: FORENSE ================= -->
-        <div id="forense" class="section">
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-search"></i> Artefactos Forenses en Windows</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>El análisis forense digital busca evidencias en el sistema operativo. Algunos artefactos clave en Windows incluyen:</p>
-                    <table class="cyber-table">
-                        <tr><th>Artefacto</th><th>Descripción y Utilidad</th></tr>
-                        <tr><td><strong>$MFT</strong></td><td>Master File Table. Contiene metadatos (fechas MAC, permisos) de cada archivo en NTFS.</td></tr>
-                        <tr><td><strong>Prefetch (.pf)</strong></td><td>Rastrea la ejecución de aplicaciones. Muestra nombre, ruta, fecha de ejecución y frecuencia.</td></tr>
-                        <tr><td><strong>Registro (UserAssist)</strong></td><td>Claves en HKCU que registran programas ejecutados vía GUI (codificado en ROT13).</td></tr>
-                        <tr><td><strong>Papelera ($Recycle.Bin)</strong></td><td>Archivos borrados. Se generan pares: $I (Info/Metadatos) y $R (Raw/Contenido).</td></tr>
-                    </table>
-
-                    <div class="citation">
-                        Fuente: Casey, E. (2011). *Digital Evidence and Computer Crime: Forensic Science, Computers, and the Internet*. Academic Press.
-                    </div>
-                </div></div>
-            </div>
-
-            <div class="cyber-card">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-title"><i class="fas fa-sort-amount-down"></i> Orden de Volatilidad (RFC 3227)</div>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="card-content"><div class="inner-padding text-content">
-                    <p>Al recolectar evidencia en un sistema encendido, se debe seguir el orden de volatilidad para no perder datos fugaces:</p>
-                    <ol>
-                        <li>Registros y Caché del procesador.</li>
-                        <li>Tabla de enrutamiento, caché ARP, memoria del Kernel.</li>
-                        <li><strong>Memoria RAM</strong>.</li>
-                        <li>Sistemas de archivos temporales.</li>
-                        <li>Disco duro / Medios de almacenamiento fijo.</li>
-                        <li>Datos de configuración remota y copias de seguridad.</li>
-                    </ol>
-                    <div class="citation">
-                        Fuente: Brezinski, D., & Killalea, T. (2002). *Guidelines for Evidence Collection and Archiving* (RFC 3227).
-                    </div>
-                </div></div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 6: WARGAMES ================= -->
-        <div id="wargames" class="section">
-            <div class="text-content" style="margin-bottom: 20px;">
-                <h2><i class="fas fa-laptop-code"></i> Laboratorio Práctico</h2>
-                <p>Estos sitios son estándares de la industria para practicar hacking de forma legal y segura. La mayoría están en inglés (el idioma universal de la ciberseguridad), pero son muy intuitivos.</p>
-            </div>
-            
-            <div class="grid-container">
-                <div class="grid-item">
-                    <h3 style="color:var(--highlight)">PicoCTF</h3>
-                    <p style="font-size:0.9rem; margin:10px 0;">El mejor lugar para comenzar. Retos creados por la Universidad Carnegie Mellon. Cubre Web, Criptografía, Forense y Binarios.</p>
-                    <a href="https://picoctf.org/" target="_blank" class="resource-btn">Ir al Sitio</a>
-                </div>
-                <div class="grid-item">
-                    <h3 style="color:var(--highlight)">OverTheWire (Bandit)</h3>
-                    <p style="font-size:0.9rem; margin:10px 0;">Aprende Linux y BASH resolviendo retos a través de SSH. Es el primer paso obligatorio para cualquier hacker ético.</p>
-                    <a href="https://overthewire.org/wargames/bandit/" target="_blank" class="resource-btn">Ir al Sitio</a>
-                </div>
-                <div class="grid-item">
-                    <h3 style="color:var(--highlight)">PortSwigger Web Security</h3>
-                    <p style="font-size:0.9rem; margin:10px 0;">Academia gratuita de los creadores de Burp Suite. La mejor fuente mundial para aprender vulnerabilidades Web (SQLi, XSS).</p>
-                    <a href="https://portswigger.net/web-security" target="_blank" class="resource-btn">Ir al Sitio</a>
-                </div>
-                <div class="grid-item">
-                    <h3 style="color:var(--highlight)">Atenea (CCN-CERT)</h3>
-                    <p style="font-size:0.9rem; margin:10px 0;">Plataforma de desafíos del Centro Criptológico Nacional de España. ¡Totalmente en <strong>Español</strong>!</p>
-                    <a href="https://atenea.ccn-cert.cni.es/" target="_blank" class="resource-btn">Ir al Sitio</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= SECCIÓN 7: EXAMEN ================= -->
-        <div id="quiz" class="section">
-            <div class="quiz-container">
-                <h2><i class="fas fa-clipboard-check"></i> Simulador de Examen Final</h2>
-                <p style="margin-bottom:20px; color:#aaa;">Preguntas basadas en el temario oficial del Dr. Johan Tapia.</p>
-                
-                <div id="quiz-box">
-                    <h3 id="question-text" style="color:#fff; min-height: 60px;">Cargando pregunta...</h3>
-                    <div id="options-container"></div>
-                    <div id="feedback" style="margin-top:20px; font-weight:bold;"></div>
-                    <button id="next-btn" class="resource-btn" style="display:none; margin: 20px auto;" onclick="nextQuestion()">Siguiente Pregunta</button>
-                </div>
-
-                <div id="score-box" style="display:none;">
-                    <h2 id="final-score" style="font-size:3rem; color:var(--neon-green)"></h2>
-                    <p>Puntaje Final</p>
-                    <button class="resource-btn" onclick="restartQuiz()">Reiniciar Intento</button>
-                </div>
-            </div>
-        </div>
-
+    <div class="search-container">
+        <input type="text" id="searchInput" class="cyber-input" placeholder="Comando de búsqueda..." onkeyup="filterContent()">
+        <i class="fas fa-search search-icon-btn"></i>
     </div>
 
-    <script>
-        // --- EFECTO MATRIX (Fondo) ---
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const chars = '01';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+    <div class="header-controls">
+        <div class="system-status">
+            <div class="status-dot"></div>
+            <span>SECURE</span>
+        </div>
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(11, 12, 16, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-            
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
+        <button class="action-btn" onclick="toggleFullScreen()" title="Pantalla Completa">
+            <i class="fas fa-expand"></i>
+        </button>
+        <button class="action-btn" onclick="window.print()" title="Exportar PDF">
+            <i class="fas fa-print"></i>
+        </button>
+    </div>
+</header>
+
+<script>
+    // ... tus scripts anteriores ...
+
+    // Función nueva para Pantalla Completa
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
             }
         }
-        setInterval(drawMatrix, 50);
-
-        // --- NAVEGACIÓN ---
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function toggleCard(header) {
-            header.parentElement.classList.toggle('open');
-        }
-
-        // --- HERRAMIENTA ROT13 ---
-        function applyRot13() {
-            const input = document.getElementById('rotInput').value;
-            document.getElementById('rotOutput').innerText = input.replace(/[a-zA-Z]/g, function (c) {
-                return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
-            });
-        }
-
-        // --- LÓGICA DEL QUIZ ---
-        const questions = [
-            { q: "¿Qué pilar de la CIA garantiza que la información no ha sido modificada por terceros?", a: ["Confidencialidad", "Integridad", "Disponibilidad"], c: 1 },
-            { q: "Según NIST, ¿cuál es la fase donde se busca eliminar la amenaza del entorno?", a: ["Detección", "Contención", "Erradicación"], c: 2 },
-            { q: "¿Qué hace un 'Write Blocker' en forense?", a: ["Bloquea virus", "Impide la escritura en el disco de evidencia", "Cifra los datos"], c: 1 },
-            { q: "El Ransomware se caracteriza principalmente por:", a: ["Robar contraseñas silenciosamente", "Cifrar archivos y pedir rescate", "Crear una red botnet"], c: 1 },
-            { q: "¿Qué archivo de Windows contiene metadatos de todos los archivos en NTFS?", a: ["$MFT", "System32", "Pagefile.sys"], c: 0 },
-            { q: "En el orden de volatilidad (RFC 3227), ¿qué se debe recolectar primero?", a: ["Disco Duro", "Memoria RAM", "Archivos Log"], c: 1 },
-            { q: "¿Qué técnica utiliza UserAssist para ocultar los nombres de programas?", a: ["Base64", "AES", "ROT13"], c: 2 },
-            { q: "Para enviar un mensaje confidencial (Asimétrico), se cifra con la clave:", a: ["Privada del emisor", "Pública del receptor", "Privada del receptor"], c: 1 }
-        ];
-
-        let currentQ = 0;
-        let score = 0;
-
-        function loadQuestion() {
-            const q = questions[currentQ];
-            document.getElementById('question-text').innerText = `${currentQ + 1}. ${q.q}`;
-            const opts = document.getElementById('options-container');
-            opts.innerHTML = '';
-            
-            q.a.forEach((ans, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'quiz-btn';
-                btn.innerText = ans;
-                btn.onclick = () => checkAnswer(idx, btn);
-                opts.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(idx, btn) {
-            const btns = document.querySelectorAll('.quiz-btn');
-            btns.forEach(b => b.disabled = true);
-            
-            if(idx === questions[currentQ].c) {
-                btn.classList.add('correct');
-                score++;
-                document.getElementById('feedback').innerHTML = "<span style='color:#2ecc71'>¡Correcto!</span>";
-            } else {
-                btn.classList.add('wrong');
-                btns[questions[currentQ].c].classList.add('correct');
-                document.getElementById('feedback').innerHTML = "<span style='color:#e74c3c'>Incorrecto</span>";
-            }
-            document.getElementById('next-btn').style.display = 'block';
-        }
-
-        function nextQuestion() {
-            currentQ++;
-            document.getElementById('next-btn').style.display = 'none';
-            document.getElementById('feedback').innerText = "";
-            
-            if(currentQ < questions.length) {
-                loadQuestion();
-            } else {
-                document.getElementById('quiz-box').style.display = 'none';
-                document.getElementById('score-box').style.display = 'block';
-                document.getElementById('final-score').innerText = `${score} / ${questions.length}`;
-            }
-        }
-
-        function restartQuiz() {
-            currentQ = 0;
-            score = 0;
-            document.getElementById('score-box').style.display = 'none';
-            document.getElementById('quiz-box').style.display = 'block';
-            loadQuestion();
-        }
-
-        // Iniciar
-        window.onload = loadQuestion;
-    </script>
-</body>
-</html>
+    }
+</script>
